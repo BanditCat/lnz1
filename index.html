@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--
+Copyright 2019 Jonathan (Jon) DuBois
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+<html>
+  <head>
+    <title>lnz</title>
+    <script type="text/javascript" src="lnz.js" async></script>
+  </head>
+  <body class="lnz">
+    <h1>LNZ Graphics Engine</h1>
+		<script class="lnz" type="text/plain">
+			Height = 30%;
+			Width = 30%;
+			f1 =[\x:1ff, y:2fu.[+ (x,x) [+ y [/ Mouse (20.,20.)]]]];
+			f2 = [\ z:1fu, f:2ff<1ff<2fu . [- [f z (2.,3.)] (1.,0.)]];
+			f3 = [\ g:2ff<1fu<(2ff<1ff<2fu), h:2ff<1ff<2fu.
+				[\.[[g h] [Y Mouse]]]];
+		  val = [[f3 f2 f1]];
+			Color = (0.5, [+ Posn [/ Mouse (20.,20.)]], 1.0 );
+		</script>
+		<!--<script class="lnz" type="text/plain">
+			Height = 400;
+			Width = 40%;
+			Vertices = 4;
+			Display= inline;
+			*tex = test.jpg;
+			*val = 4f2;
+			f1 = [   \x:1fc.       [+ [X Mouse] x]     ];
+			*#rtt = 4f2;
+			ao = [& Index 1];
+			at = [Y [+ (1.0,0.0,2.0) (0.0,[/ Mouse (20.,20.)])]];
+			TriangleStrip = ([Tofloat ao], [+ at [Tofloat [/ Index 2]]],
+			( 0.0 , 1.0 ) );
+			@vary = [Tofloat [* 2. at]];
+			px=(( 2.,Pi ));
+			pet2 = [- (px,2.) (1.1,(0.25, 0.25))];
+			uv = [+ Mouse [XY pet2]];
+			red = [X [* uv Posn ]];
+			*val = ([XY [*tex Posn]], [* 0.0 [X Posn]],1.0);
+			Color = ([- 1.0 red], [XY [*#rtt Posn]], 1.0 );
+		</script>
+		<script class="lnz" type="text/plain">
+			Height= 300;
+			Width= 30%;
+			Display= inline;
+			Color = ([XY [*
+			[*val Posn]
+			( [+ Posn [/ Mouse (10.,10.)]], 1.0, 1.0)]], 1.0, 1.0);
+			*#rtt = (Color);
+		</script>
+		<script class="lnz" type="text/plain">
+			Height= 200;
+			Width= 20%;
+			*tex2 = test2.jpg;
+			Display= inline;
+			xy = [* [- ([Tofloat [& Index 1]],
+			[Tofloat [/ Index 2]]) (0.5,0.5)] (2.,2.)];
+			TriangleStrip = (xy, 0.0, 1.0);
+			Color = ( [XY [*#rtt Posn]], [Z [*tex2 Posn]], 1.0);
+		</script>-->
+		<script class="lnz" type="text/plain" id="frac">
+			Width = 100%;
+			Height = 100%;
+			*m1 = 4f2;
+			xy = [* [- ([Tofloat [& Index 1]], [Tofloat [/ Index 2]]) (0.5,0.5)]
+			(2.,2.)];
+
+			.pos = 2f();
+			.zoom = 1f( 1.0 );
+			bpos = 2f();
+			lpos = [Len pos];
+			z1 = [If [& MouseButtons 2]
+			         [* [+ 1.0 [/ [Y Mouse] 100.]] zoom]
+			         zoom];
+      redraw = [+ [+ [< z1 0.5] [> z1 2.0]]
+                  [+ [> lpos 1.0]
+                     [Tofloat [= MouseClicks 4]]]];
+			zs = [If redraw [/ 1.0 z1] 1.0];
+			bzoom = 1f( 4. );
+      bpos = [If redraw [+ bpos [* pos ([* Aspect bzoom], bzoom)]] bpos];
+			bzoom = [/ bzoom zs];
+			zoom = [* z1 zs];
+			p1 = [* [/ Mouse (80.,80.)] (zoom,zoom)];
+			p2 = [If [& MouseButtons 1] [+ pos p1] pos];
+			czoom = [* bzoom zoom];
+			pos = [If redraw (0.0, 0.0) p2];
+
+			@box = [+ [* [* xy (bzoom,bzoom)] (Aspect, 1.0)] bpos];
+			TriangleStrip = (xy, 0.0, 1.0);
+
+
+			cx = [X [*m1 Posn]];
+			cy = [Y [*m1 Posn]];
+			cz = [Z [*m1 Posn]];
+			bc = [< [+ [* cx cx] [* cy cy]] 4.0];
+			cnz = [If bc [+ cz 0.1] cz];
+			outc = ( [- [* cx cx] [* cy cy]], [* 2.0 [* cx cy]] );
+      fval =  [% [Log [+ cz 2.0]] 2.0];
+			val = [If bc ([+ outc @box], cnz, 0.0) ([XYZ [*m1 Posn]], 
+              [+ [If [> fval 1.0] [- 2.0 fval] fval] 0.01])];
+			val2 = [If redraw (0.,0.,0.,1.) val];
+			*m1 = (val2);
+		</script>
+		<!--<script class="lnz" type="text/plain" id="frac">
+			Width = 100%;
+			Height = 100%;
+			*#m2 = 4f2;
+			*#m2 = [*m1 Posn];
+		</script>-->
+		<script class="lnz" type="text/plain">
+			Width = 100%;
+			Height = 100%;
+			nrml = [+
+			         [* [- [* Posn (2.0, 2.0)] (1.0, 1.0)] (frac.zoom, frac.zoom)]
+			         frac.pos];
+			rnrml = [/ [+ nrml (1.0, 1.0)] (2.0, 2.0)];
+			t = [*m1 rnrml];
+      Color = [If [W t] (0.0, [W t], [W t], 1.0) (1.0, 1.0, 1.0, 1.0)];
+			
+		</script>
+	  <p onclick="lnz.webglInfo()">barLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type  and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with de
+    
+    Why do we use it?
+    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+    
+    Where does it come from?
+    Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College </p>
+	<canvas id="render" class="lnz" width="1024" height="768"></canvas>
+  </body>
+</html>

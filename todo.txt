@@ -1,0 +1,22 @@
+FIRST ORDER MF FUCNTIONS church numerals.
+
+Make transfer to image bitmap run in a seperate thread.
+Decouple request animation frame to a web worker. 
+
+thunks
+
+vertices as general function.
+Height and width as general functions.
+
+single line comments
+
+proper error reporting with line number.
+
+type annotations in declerations that get checked.
+
+int sampling
+texture arrays
+3d textures
+
+
+testing
